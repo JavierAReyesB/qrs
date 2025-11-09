@@ -6,6 +6,7 @@ import { crearCliente } from "@/lib/dataAdapter"
 const registroSchema = z.object({
   nombre: z.string().min(2, "Tu nombre debe tener al menos 2 caracteres"),
   email: z.string().email("Introduce un email válido"),
+  telefono: z.string().min(9, "Teléfono inválido").optional().or(z.literal("")),
   consentimiento: z.literal(true, {
     errorMap: () => ({ message: "Debes aceptar el uso de tus datos" }),
   }),
@@ -29,12 +30,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { nombre, email } = result.data
+    const { nombre, email, telefono } = result.data
 
     // Crear cliente usando el adapter existente
     const cliente = crearCliente({
       nombre,
       email,
+      telefono: telefono || undefined,
     })
 
     // Retornar respuesta exitosa con los datos del cliente

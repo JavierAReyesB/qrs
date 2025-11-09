@@ -27,6 +27,7 @@ import { useToast } from "@/hooks/use-toast"
 const registroSchema = z.object({
   nombre: z.string().min(2, "Tu nombre debe tener al menos 2 caracteres"),
   email: z.string().email("Introduce un email válido"),
+  telefono: z.string().min(9, "Teléfono inválido").optional().or(z.literal("")),
   consentimiento: z.literal(true, {
     errorMap: () => ({ message: "Debes aceptar el uso de tus datos" }),
   }),
@@ -146,6 +147,25 @@ export function RegistroForm() {
             {errors.email && (
               <p id="email-error" className="text-sm text-destructive" role="alert">
                 {errors.email.message}
+              </p>
+            )}
+          </div>
+
+          {/* Campo: Teléfono (opcional) */}
+          <div className="space-y-2">
+            <Label htmlFor="telefono">Teléfono (opcional)</Label>
+            <Input
+              id="telefono"
+              type="tel"
+              placeholder="612345678"
+              disabled={isSubmitting}
+              aria-invalid={!!errors.telefono}
+              aria-describedby={errors.telefono ? "telefono-error" : undefined}
+              {...register("telefono")}
+            />
+            {errors.telefono && (
+              <p id="telefono-error" className="text-sm text-destructive" role="alert">
+                {errors.telefono.message}
               </p>
             )}
           </div>
